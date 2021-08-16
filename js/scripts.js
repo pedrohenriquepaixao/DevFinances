@@ -45,7 +45,7 @@ const Transaction = {
         let income = 0;
         Transaction.all.forEach(transaction => {
             if (transaction.amount > 0) {
-                income += transaction.amount;
+                income += Number(transaction.amount);
             }
         })
         return income;
@@ -56,7 +56,7 @@ const Transaction = {
         let expenses = 0
         Transaction.all.forEach(transaction => {
             if (transaction.amount < 0) {
-                expenses += transaction.amount;
+                expenses += Number(transaction.amount);
             }
         })
         return expenses;
@@ -83,10 +83,11 @@ const DOM = {
 
         const CSSclass = transaction.amount < 0 ? "expense" : "income";
         const amount = Utils.formatCurrency(transaction.amount);
+        const date = Utils.formatDate(transaction.date);
         const html = `
             <td class="description">${transaction.description}</td>
             <td class="${CSSclass}">${amount}</td>
-            <td class="date">${transaction.date}</td>
+            <td class="date">${date}</td>
             <td>
                 <img onclick="Transaction.remove(${index})" src="./img/minus.svg" alt="Remover transação">
             </td>
@@ -216,6 +217,17 @@ const App = {
         App.init()
     }
 }
+
+const teste =  fetch('http://localhost/api__controle_gastos/api/v1/carteira/mostrar')
+.then(T => T.json())
+.then(result => {
+    Storage.set(result.dados) 
+}
+)
+
+console.log(Storage.get())
+
+
 
 App.init();
 
